@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Lịch Sử Mua Khóa Học</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Arial', sans-serif;
+      background: linear-gradient(120deg, #f5f7fa, #eaf2f8);
+      color: #333;
+      padding: 0;
+      margin: 0;
+    }
+
+    .container {
+      width: 90%;
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 20px 0;
+    }
+
+    .header {
+      text-align: center;
+      margin-bottom: 30px;
+    }
+
+    .header h1 {
+      font-size: 4rem;
+      color: #2196F3;
+      font-weight: bold;
+      text-shadow: 3px 3px 5px rgba(0, 0, 0, 0.15);
+    }
+
+    .courses-container {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 20px;
+      margin-top: 10px;
+    }
+
+    .course-card {
+      background-color: #fff;
+      border-radius: 15px;
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+      overflow: hidden;
+      position: relative;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .course-card:hover {
+      transform: scale(1.05);
+      box-shadow: 0 12px 25px rgba(0, 0, 0, 0.15);
+    }
+
+    .course-card img {
+      width: 100%;
+      height: 180px;
+      object-fit: cover;
+      border-bottom: 2px solid #2196F3;
+    }
+
+    .course-card .course-details {
+      padding: 20px;
+      text-align: center;
+    }
+
+    .course-card h3 {
+      font-size: 1.5rem;
+      color: #2196F3;
+      margin-bottom: 10px;
+      font-weight: bold;
+    }
+
+    .course-card p {
+      font-size: 1rem;
+      color: #666;
+      margin-bottom: 15px;
+      line-height: 1.5;
+    }
+
+    .button-container {
+      display: flex;
+      justify-content: center;
+      gap: 10px;
+      margin-top: 15px;
+    }
+
+    .cancel-button {
+      background-color: #f44336;
+      color: white;
+      border: none;
+      padding: 10px 15px;
+      font-size: 1rem;
+      border-radius: 5px;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+
+    .cancel-button:hover {
+      background-color: #d32f2f;
+    }
+
+    footer {
+      background: linear-gradient(120deg, #1E88E5, #1565C0);
+      color: white;
+      text-align: center;
+      padding: 20px;
+      font-size: 1rem;
+      margin-top: 40px;
+    }
+
+    footer p {
+      margin: 0;
+      font-size: 1.2rem;
+    }
+
+    .empty-message {
+      text-align: center;
+      font-size: 1.5rem;
+      color: #999;
+      margin-top: 50px;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <!-- Tiêu đề -->
+    <div class="header">
+      <h1>Lịch Sử Mua Khóa Học</h1>
+    </div>
+
+    <!-- Danh sách khóa học -->
+    <div id="purchasedCoursesContainer" class="courses-container">
+      <!-- Các khóa học đã mua sẽ được hiển thị tại đây -->
+    </div>
+  </div>
+
+  <footer>
+    <p>© 2024 Khóa học trực tuyến. All rights reserved.</p>
+  </footer>
+
+  <script>
+    // Lấy danh sách khóa học đã mua từ LocalStorage
+    let purchasedCourses = JSON.parse(localStorage.getItem("purchasedCourses")) || [];
+    const coursesContainer = document.getElementById("purchasedCoursesContainer");
+
+    function renderPurchasedCourses(data) {
+      if (data.length === 0) {
+        coursesContainer.innerHTML = `<p class="empty-message">Bạn chưa mua khóa học nào.</p>`;
+        return;
+      }
+
+      coursesContainer.innerHTML = "";
+      data.forEach((course, index) => {
+        const courseCard = document.createElement("div");
+        courseCard.classList.add("course-card");
+        courseCard.innerHTML = `
+          <img src="${course.image}" alt="${course.title}">
+          <div class="course-details">
+            <h3>${course.title}</h3>
+            <p>${course.description}</p>
+            <div class="button-container">
+              <button class="cancel-button" onclick="cancelCourse(${index})">Hủy khóa học</button>
+            </div>
+          </div>
+        `;
+        coursesContainer.appendChild(courseCard);
+      });
+    }
+
+    // Hàm hủy khóa học
+    function cancelCourse(index) {
+      if (confirm("Bạn có chắc chắn muốn hủy khóa học này?")) {
+        purchasedCourses.splice(index, 1); // Xóa khóa học khỏi danh sách
+        localStorage.setItem("purchasedCourses", JSON.stringify(purchasedCourses)); // Cập nhật LocalStorage
+        renderPurchasedCourses(purchasedCourses); // Cập nhật giao diện
+      }
+    }
+
+    // Gọi hàm hiển thị
+    renderPurchasedCourses(purchasedCourses);
+  </script>
+
+</body>
+</html>
